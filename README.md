@@ -20,4 +20,5 @@ _Kursiv schreiben geht mit_ `Unterstrichen`
 ### Hier sollte nun ein Bild folgen
 
 direkt verlinkt mit relativem Pfad
+durch setzte eines `!` und  eines Links
  ![Image](data/Sentinel-2 L1C from 2020-02-17.jpg)
