@@ -17,6 +17,8 @@ Es gibt verschiedene Styles, die mit Markdown funktionieren
 **Fett schreiben geht einfach** `dazu Akzentzeichen solo setzten`
 _Kursiv schreiben geht mit_ `Unterstrichen`
 
+Ein Verweis auf eine [Unterseite](data/irgendein.md)
+
 ### Hier sollte nun ein Bild folgen
 
 direkt verlinkt mit relativem Pfad
