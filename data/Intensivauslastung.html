@@ -1,0 +1,154 @@
+<html>
+<meta charset="UTF-8">
+
+<head>
+<style>
+  * {
+  box-sizing: border-box;
+}
+  .myge {
+      border:1p;
+      border-style: solid;
+      float:left
+
+  }
+</style>
+</head>
+
+<body>
+  <div class=myGraphContainer>
+  <div class=myge>
+    <canvas id="DIVIDeu"></canvas>
+  </div>
+  <div class=myge>
+    <canvas id="SU"></canvas>
+  </div>
+  <div class=myge>
+    <canvas id="BN"></canvas>
+  </div>
+  <div class=myge>
+    <canvas id="K"></canvas>
+  </div>
+  <div class=myge>
+    <canvas id="NR"></canvas>
+  </div>
+</div>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+  <script>
+    let baseurl = 'https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/DIVI_Intensivregister_Landkreise/FeatureServer/0/query?';
+
+    let queryClause = 'where=1=1&outFields="faelle_covid_aktuell"&returnGeometry=False&f=json'
+    let queryClause_faelleCovid = 'where=1%3D1&outFields=faelle_covid_aktuell&returnGeometry=false&outStatistics=%5B%0D%0A++%7B%0D%0A++++"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"faelle_covid_aktuell"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_faelle_covid_aktuell"%0D%0A++%7D%2C%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_belegt"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_belegt"%0D%0A%7D%2C%0D%0A%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_frei"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_frei"%0D%0A%7D%0D%0A%0D%0A%0D%0A%0D%0A%5D&f=pjson'
+
+    // statistic urls
+    let queryClauseSU = 'where=AGS=05382&outFields=faelle_covid_aktuell&returnGeometry=false&outStatistics=%5B%0D%0A++%7B%0D%0A++++"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"faelle_covid_aktuell"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_faelle_covid_aktuell"%0D%0A++%7D%2C%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_belegt"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_belegt"%0D%0A%7D%2C%0D%0A%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_frei"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_frei"%0D%0A%7D%0D%0A%0D%0A%0D%0A%0D%0A%5D&f=pjson'
+    let queryClauseBN = 'where=AGS=05314&outFields=faelle_covid_aktuell&returnGeometry=false&outStatistics=%5B%0D%0A++%7B%0D%0A++++"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"faelle_covid_aktuell"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_faelle_covid_aktuell"%0D%0A++%7D%2C%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_belegt"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_belegt"%0D%0A%7D%2C%0D%0A%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_frei"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_frei"%0D%0A%7D%0D%0A%0D%0A%0D%0A%0D%0A%5D&f=pjson'
+    let queryClauseK = 'where=AGS=05315&outFields=faelle_covid_aktuell&returnGeometry=false&outStatistics=%5B%0D%0A++%7B%0D%0A++++"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"faelle_covid_aktuell"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_faelle_covid_aktuell"%0D%0A++%7D%2C%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_belegt"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_belegt"%0D%0A%7D%2C%0D%0A%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_frei"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_frei"%0D%0A%7D%0D%0A%0D%0A%0D%0A%0D%0A%5D&f=pjson'
+    let queryClauseNR = 'where=AGS=07138&outFields=faelle_covid_aktuell&returnGeometry=false&outStatistics=%5B%0D%0A++%7B%0D%0A++++"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"faelle_covid_aktuell"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_faelle_covid_aktuell"%0D%0A++%7D%2C%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_belegt"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_belegt"%0D%0A%7D%2C%0D%0A%0D%0A%7B%0D%0A"statisticType"%3A+"sum"%2C%0D%0A++++"onStatisticField"%3A+"betten_frei"%2C+%0D%0A++++"outStatisticFieldName"%3A+"sum_betten_frei"%0D%0A%7D%0D%0A%0D%0A%0D%0A%0D%0A%5D&f=pjson'
+
+    // regional
+    function plotbar(labelname, sumcov, sumbettenbelegt, sumbettenfrei) {
+      // die Daten beschreiben
+      const data = {
+        labels: ['Belegte Betten', 'Belegte Betten durch COVID-19 Fälle', 'Freie Betten'],
+        datasets: [
+          {
+            label: labelname,
+            data: [sumbettenbelegt - sumcov, sumcov, sumbettenfrei],
+            backgroundColor: ['#de5a5a', '#ab0000', '#449900',]
+          }
+        ]
+      };
+
+      // config fuer die daten
+      const config = {
+        type: 'doughnut',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: labelname
+            }
+          }
+        },
+      };
+
+      // schreib den scheiß nach DOM
+      const myChart = new Chart(
+        document.getElementById(labelname),
+        config
+      );
+    }
+
+    fetch(baseurl + queryClauseBN)
+      .then(response => response.json())
+      .then(mydata => plotbar("BN", mydata.features[0].attributes.sum_faelle_covid_aktuell, mydata.features[0].attributes.sum_betten_belegt, mydata.features[0].attributes.sum_betten_frei))
+    fetch(baseurl + queryClauseSU)
+      .then(response => response.json())
+      .then(mydata => plotbar("SU", mydata.features[0].attributes.sum_faelle_covid_aktuell, mydata.features[0].attributes.sum_betten_belegt, mydata.features[0].attributes.sum_betten_frei))
+    fetch(baseurl + queryClauseNR)
+      .then(response => response.json())
+      .then(mydata => plotbar("NR", mydata.features[0].attributes.sum_faelle_covid_aktuell, mydata.features[0].attributes.sum_betten_belegt, mydata.features[0].attributes.sum_betten_frei))
+    fetch(baseurl + queryClauseK)
+      .then(response => response.json())
+      .then(mydata => plotbar("K", mydata.features[0].attributes.sum_faelle_covid_aktuell, mydata.features[0].attributes.sum_betten_belegt, mydata.features[0].attributes.sum_betten_frei))
+
+    // global
+    fetch(baseurl + queryClause_faelleCovid)
+      .then(response => response.json())
+      .then(mydata => plotdonut(mydata.features[0].attributes.sum_faelle_covid_aktuell, mydata.features[0].attributes.sum_betten_belegt, mydata.features[0].attributes.sum_betten_frei));
+
+    function plotdonut(sumcov, sumbettenbelegt, sumbettenfrei) {
+      console.log(sumcov + sumbettenbelegt + sumbettenfrei)
+      // grafik von https://www.chartjs.org/docs/latest/samples/other-charts/doughnut.html
+      const data = {
+        labels: ['Belegte Betten', 'Belegte Betten durch COVID-19 Fälle', 'Freie Betten'],
+        datasets: [
+          {
+            label: 'DIVI Daten',
+            data: [sumbettenbelegt - sumcov, sumcov, sumbettenfrei],
+            backgroundColor: ['#de5a5a', '#ab0000', '#449900',]
+          }
+        ]
+      };
+
+      const config_DIVIDeu = {
+        type: 'doughnut',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Intensivbelastung'
+            }
+          }
+        },
+      };
+
+      const myChart = new Chart(
+        document.getElementById('DIVIDeu'),
+        config_DIVIDeu
+      );
+
+    };
+
+  </script>
+</body>
+
+</html>
